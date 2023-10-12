@@ -57,6 +57,7 @@ public class ProfileManager {
         document.put("_id", profile.getId());
         document.put("username", profile.getUsername());
         document.put("level", profile.getLevel());
+        document.put("blacklist", profile.getBlacklist());
         usersCollection.insertOne(document);
     }
 

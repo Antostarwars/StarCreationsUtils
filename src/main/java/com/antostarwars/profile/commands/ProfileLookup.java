@@ -7,6 +7,7 @@ import com.antostarwars.utils.ColorPalette;
 import gg.flyte.neptune.annotation.Command;
 import gg.flyte.neptune.annotation.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,7 +21,8 @@ public class ProfileLookup extends ListenerAdapter {
 
     @Command(
             name = "profile",
-            description = "See your profile information"
+            description = "See your profile information",
+            permissions = {Permission.ADMINISTRATOR}
     )
     public void onProfile(SlashCommandInteractionEvent event) {
         ProfileManager profileManager = instance.getProfileManager();
