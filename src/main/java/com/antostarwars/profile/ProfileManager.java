@@ -5,10 +5,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import gg.flyte.neptune.Neptune;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.bson.Document;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ProfileManager {
@@ -22,14 +24,20 @@ public class ProfileManager {
         this.usersCollection = instance.getMongo().getUsersCollection();
     }
     public void initializeProfileManager() {
+        usersCollection.find().forEach((Consumer<? super Document>) document -> {
+            if (!document.containsKey("blacklist")) {
+                document.append("blacklist", false);
+                usersCollection.replaceOne(Filters.eq("_id", document.getString("_id")), document, new ReplaceOptions().upsert(true));
+            }
+        });
 
         usersCollection.find().forEach((Consumer<? super Document>) document -> {
             String id = document.getString("_id");
             String username = document.getString("username");
             Integer level = document.getInteger("level", 0);
-            Boolean newsletter = document.getBoolean("newsletter", true);
+            boolean blacklist = document.getBoolean("blacklist", false);
 
-            profilesCache.put(id, new Profile(id, username, level));
+            profilesCache.put(id, new Profile(id, username, level, blacklist));
         });
     }
 
@@ -80,6 +88,19 @@ public class ProfileManager {
         }
     }
 
+    public void toggleBlacklist(String id) {
+        Document document = usersCollection.find(Filters.eq("_id", id)).first();
+        if (document != null && document.containsKey("blacklist")) {
+            // Edit Caches
+            Profile profile = profilesCache.get(id);
+            profile.toggleBlacklist();
+
+            // Edit Database
+            Boolean blacklist = document.getBoolean("blacklist");
+            document.replace("blacklist", profile.getBlacklist());
+            usersCollection.replaceOne(Filters.eq("_id", id), document, new ReplaceOptions().upsert(true));
+        }
+    }
 
     public Profile findBy(String id) {
         return profilesCache.get(id);

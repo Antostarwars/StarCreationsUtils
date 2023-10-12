@@ -1,10 +1,13 @@
 package com.antostarwars.ticket.listeners;
 
 import com.antostarwars.Bot;
+import com.antostarwars.profile.Profile;
+import com.antostarwars.profile.ProfileManager;
 import com.antostarwars.ticket.Ticket;
 import com.antostarwars.ticket.TicketCategory;
 import com.antostarwars.ticket.TicketManager;
 import com.antostarwars.utils.ColorPalette;
+import com.antostarwars.utils.EmbedTemplates;
 import com.antostarwars.utils.Environment;
 import gg.flyte.neptune.Neptune;
 import gg.flyte.neptune.annotation.Inject;
@@ -31,6 +34,14 @@ public class TicketOpen extends ListenerAdapter {
     @Override
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
         if (!event.getComponentId().equals("ticket-choose") || !event.getGuild().equals(event.getJDA().getGuildById(Environment.get("BOT_GUILD")))) return;
+
+        // Check for a Blacklist.
+        ProfileManager profileManager = instance.getProfileManager();
+        Profile profile = profileManager.findBy(event.getUser().getId());
+        if (profile.getBlacklist()) {
+            event.replyEmbeds(EmbedTemplates.getBlacklistEmbed().build()).setEphemeral(true).queue();
+            return;
+        }
 
         TicketManager ticketManager = instance.getTicketManager();
 

@@ -25,6 +25,6 @@ public class ProfileListener extends ListenerAdapter {
         if (!event.getGuild().equals(guild)) return;
 
         ProfileManager profileManager = instance.getProfileManager();
-        profileManager.addProfileAndUpdate(new Profile(event.getMember().getId(), event.getMember().getEffectiveName(), 0));
+        profileManager.addProfileAndUpdate(new Profile(event.getMember().getId(), event.getMember().getEffectiveName(), 0, false));
     }
 }

@@ -14,15 +14,19 @@ public class Mongo {
     private MongoCollection<Document> usersCollection;
 
     private MongoCollection<Document> ticketsCollection;
+    private MongoCollection<Document> blacklistCollection;
 
     public void initializeMongoDatabase() {
         client = MongoClients.create(Environment.get("MONGO_URI"));
         database = client.getDatabase(Environment.get("MONGO_DATABASE"));
         usersCollection = database.getCollection(Environment.get("MONGO_USERS_COLLECTION"));
         ticketsCollection = database.getCollection(Environment.get("MONGO_TICKETS_COLLECTION"));
+        blacklistCollection = database.getCollection(Environment.get("MONGO_BLACKLIST_COLLECTION"));
     }
 
     public MongoCollection<Document> getUsersCollection() { return usersCollection; }
 
     public MongoCollection<Document> getTicketsCollection() { return ticketsCollection; }
+
+    public MongoCollection<Document> getBlacklistCollection() { return blacklistCollection; }
 }

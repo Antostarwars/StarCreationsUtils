@@ -6,10 +6,13 @@ public class Profile {
     private final String username;
     private Integer level;
 
-    public Profile(String id, String username, Integer level) {
+    private boolean blacklist;
+
+    public Profile(String id, String username, Integer level, boolean blacklist) {
         this.id = id;
         this.username = username;
         this.level = level;
+        this.blacklist = blacklist;
     }
 
     public String getId() {
@@ -24,10 +27,14 @@ public class Profile {
         return level;
     }
 
+    public boolean getBlacklist() { return blacklist; }
+
 
     public void addLevel(Integer amount) {
         this.level += amount;
     }
 
     public void removeLevel(Integer amount) { this.level -= amount; }
+
+    public void toggleBlacklist() { this.blacklist = !this.blacklist; }
 }
