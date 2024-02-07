@@ -95,7 +95,7 @@
         <dependency>
             <groupId>com.github.flytegg</groupId>
             <artifactId>neptune</artifactId>
-            <version>2.3</version>
+            <version>2.4</version>
         </dependency>
         <!-- MongoDB API -->
         <dependency>

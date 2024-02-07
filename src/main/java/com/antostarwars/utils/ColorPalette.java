@@ -8,4 +8,5 @@ public class ColorPalette {
     public static int getMauve() { return 0xE2ADF2; }
     public static int getDiscordBackground() { return 0x313338; }
     public static int getDiscordEmbed() { return 0x2b2d31; }
+    public static int getErrorColor() { return 0xFF0000; }
 }

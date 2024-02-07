@@ -1,10 +1,12 @@
 package com.antostarwars.ticket;
 
 import com.antostarwars.Bot;
+import com.antostarwars.utils.Environment;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import gg.flyte.neptune.Neptune;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bson.Document;
 
 import java.io.File;
@@ -25,18 +27,20 @@ public class TicketManager {
     }
 
     public void initializeTicketManager() {
-
+        List<TextChannel> tickets = instance.getJDA().getCategoryById(Environment.get("TICKET_CATEGORY")).getTextChannels();
         ticketsCollection.find().forEach( (Consumer<? super Document>) document -> {
             int id = document.getInteger("_id");
             String channelId = document.getString("channel_id");
-            String userId = document.getString("user_id");
-            String category = document.getString("category");
-            Date startDate = document.getDate("start_date");
-            List<String> messagesTranscript = document.getList("messages_transcript", String.class);
-            Integer messagesNumber = document.getInteger("messages_number", 0);
+            boolean ticketOpen = tickets.stream().anyMatch(element -> element.getId().equals(channelId));
+            if (ticketOpen) {
+                String userId = document.getString("user_id");
+                String category = document.getString("category");
+                Date startDate = document.getDate("start_date");
+                List<String> messagesTranscript = document.getList("messages_transcript", String.class);
+                Integer messagesNumber = document.getInteger("messages_number", 0);
 
-            ticketsCache.put(channelId, new Ticket(id, channelId, userId, category, startDate, messagesTranscript));
-
+                ticketsCache.put(channelId, new Ticket(id, channelId, userId, category, startDate, messagesTranscript));
+            }
         });
 
         // Create Tickets Directory for Messages Transcript
@@ -71,7 +75,7 @@ public class TicketManager {
         ticketsCollection.insertOne(document);
     }
 
-    public int nextTicketId() { return ticketsCache.size() + 1; }
+    public int nextTicketId() { return (int) ticketsCollection.countDocuments() + 1; }
     public Ticket findBy(String channelId) { return ticketsCache.get(channelId); }
 
     public Ticket findBy(int id) {

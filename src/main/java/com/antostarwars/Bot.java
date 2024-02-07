@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
-import java.time.Instant;
 
 public class Bot {
     private final Logger LOGGER = Neptune.LOGGER;
@@ -23,13 +22,15 @@ public class Bot {
     private ProfileManager profileManager;
     private TicketManager ticketManager;
 
+    private JDA bot;
+
     private long uptime;
 
     private Mongo mongo;
     public void initializeBot() throws InterruptedException {
 
         // Initialize JDA Bot
-        JDA bot = JDABuilder
+        bot = JDABuilder
                 .createDefault(Environment.get("BOT_TOKEN"))
                 .setActivity(Activity.playing(Environment.get("ACTIVITY")))
                 .enableIntents(
@@ -43,6 +44,20 @@ public class Bot {
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .build().awaitReady();
 
+        // Initialize MongoDB
+        mongo = new Mongo();
+        mongo.initializeMongoDatabase();
+        LOGGER.info("{} MongoDB Initialized Correctly!");
+
+        // Initialize TicketManager
+        ticketManager = new TicketManager(this);
+        ticketManager.initializeTicketManager();
+
+        // Initialize ProfileManager
+        profileManager = new ProfileManager(this);
+        profileManager.initializeProfileManager();
+        LOGGER.info("{} ProfileManager Initialized Correctly!");
+        LOGGER.info("{} TicketManager Initialized Correctly!");
 
         // Initialize Neptune Framework
         Guild guild = bot.getGuildById(Environment.get("BOT_GUILD"));
@@ -53,20 +68,6 @@ public class Bot {
                 .create();
 
         LOGGER.info("{} " + bot.getSelfUser().getName() + " is ON!");
-        // Initialize MongoDB
-        mongo = new Mongo();
-        mongo.initializeMongoDatabase();
-        LOGGER.info("{} MongoDB Initialized Correctly!");
-
-        // Initialize ProfileManager
-        profileManager = new ProfileManager(this);
-        profileManager.initializeProfileManager();
-        LOGGER.info("{} ProfileManager Initialized Correctly!");
-
-        // Initialize TicketManager
-        ticketManager = new TicketManager(this);
-        ticketManager.initializeTicketManager();
-        LOGGER.info("{} TicketManager Initialized Correctly!");
 
         // Set Uptime to Now.
         uptime = System.currentTimeMillis();
@@ -81,6 +82,8 @@ public class Bot {
     public long getUptime() { return uptime; }
 
     public Mongo getMongo() { return mongo; }
+
+    public JDA getJDA() { return bot; }
 
     @Instantiate
     public Bot instance() {

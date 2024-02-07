@@ -2,16 +2,25 @@ package com.antostarwars.ticket;
 
 import com.antostarwars.Bot;
 import com.antostarwars.utils.ColorPalette;
+import com.antostarwars.utils.EmbedTemplates;
+import com.antostarwars.utils.Environment;
 import gg.flyte.neptune.annotation.Command;
 import gg.flyte.neptune.annotation.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
-public class TicketCommands extends ListenerAdapter {
+import java.util.Date;
+
+public class TicketCommands {
     @Inject
     private Bot instance;
 
@@ -21,6 +30,7 @@ public class TicketCommands extends ListenerAdapter {
             permissions = {Permission.ADMINISTRATOR}
     )
     public void onTicketSetup(SlashCommandInteractionEvent event) {
+        if(!event.getGuild().equals(event.getJDA().getGuildById(Environment.get("BOT_GUILD")))) return;
         TextChannel channel = event.getChannel().asTextChannel();
 
         EmbedBuilder embed = new EmbedBuilder()
