@@ -1,5 +1,6 @@
 package com.antostarwars;
 
+import com.antostarwars.portfolio.PortfolioManager;
 import com.antostarwars.profile.ProfileManager;
 import com.antostarwars.ticket.TicketManager;
 import com.antostarwars.utils.Environment;
@@ -22,6 +23,7 @@ public class Bot {
 
     private ProfileManager profileManager;
     private TicketManager ticketManager;
+    private PortfolioManager portfolioManager;
 
     private long uptime;
 
@@ -68,6 +70,10 @@ public class Bot {
         ticketManager.initializeTicketManager();
         LOGGER.info("{} TicketManager Initialized Correctly!");
 
+        // Initialize PortfolioManager
+        portfolioManager = new PortfolioManager(this);
+        LOGGER.info("{} PortfolioManager Initialized Correctly!");
+
         // Set Uptime to Now.
         uptime = System.currentTimeMillis();
     }
@@ -77,6 +83,8 @@ public class Bot {
     }
 
     public TicketManager getTicketManager() { return ticketManager; }
+
+    public PortfolioManager getPortfolioManager() { return portfolioManager; }
 
     public long getUptime() { return uptime; }
 

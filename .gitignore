@@ -39,4 +39,5 @@ build/
 
 ### SENSITIVE INFORMATIONS ###
 .env
-/tickets/
+/tickets
+/portfolio

@@ -10,4 +10,18 @@ public class EmbedTemplates {
                 .setTitle("You're Blacklisted.")
                 .setDescription("You're Blacklisted from using this Feature. \nPlease Contact the Staff if you think this was an error.");
     }
+
+    public static EmbedBuilder getErrorEmbed(String error) {
+        return new EmbedBuilder()
+                .setColor(ColorPalette.getDiscordEmbed())
+                .setTitle("Something went wrong")
+                .setDescription(error);
+    }
+
+    public static EmbedBuilder getSuccessEmbed(String success) {
+        return new EmbedBuilder()
+                .setColor(ColorPalette.getDiscordEmbed())
+                .setTitle("Action made with success.")
+                .setDescription(success);
+    }
 }
