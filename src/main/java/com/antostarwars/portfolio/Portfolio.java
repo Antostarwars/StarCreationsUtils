@@ -44,15 +44,18 @@ public class Portfolio {
 
         // Setup Buttons
         List<Button> buttons = new ArrayList<>();
+        buttons.add(Button.primary("Portfolio - " + member.getId() + "-" + (currentPage), currentPage + 1 + "/" + files.size()).asDisabled());
+        // Add/Disable Left Arrow Button
         if (currentPage > 0) buttons.add(0, Button.success("Portfolio - " + member.getId() + "-" + (currentPage - 1), Emoji.fromUnicode("U+2B05")));
+        else buttons.add(0, Button.success("Portfolio - " + member.getId() + "-" + (currentPage - 1), Emoji.fromUnicode("U+2B05")).asDisabled());
+        // Add/Disable Right Arrow button
         if (currentPage + 1 < files.size()) buttons.add(Button.success("Portfolio - " + member.getId() + "-" + (currentPage + 1), Emoji.fromUnicode("U+27A1")));
+        else buttons.add(Button.success("Portfolio - " + member.getId() + "-" + (currentPage + 1), Emoji.fromUnicode("U+27A1")).asDisabled());
 
-        MessageCreateBuilder messageBuilder = new MessageCreateBuilder()
+        return new MessageCreateBuilder()
                 .addContent("### You're viewing " + member.getEffectiveName() + " Portfolio.")
-                .addFiles(files.get(currentPage));
-
-        if (!buttons.isEmpty()) messageBuilder.addActionRow(buttons);
-
-        return messageBuilder.build();
+                .addFiles(files.get(currentPage))
+                .addActionRow(buttons)
+                .build();
     }
 }
