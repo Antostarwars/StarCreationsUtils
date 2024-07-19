@@ -27,7 +27,7 @@ public class TicketUpdateMessages extends ListenerAdapter {
         if (!event.getGuild().equals(guild) || !event.getChannelType().equals(ChannelType.TEXT) || ticket == null) return;
         if (event.getAuthor().isBot()) return;
 
-        ticket.getMessagesTranscript().add(event.getAuthor().getName() + ": " + event.getMessage().getContentRaw() + "\n");
+        ticket.getMessagesTranscript().add(event.getAuthor().getName() + " [" + event.getMessage().getTimeCreated() + "] " + ": " + event.getMessage().getContentRaw() + "\n");
         if (!event.getMessage().getAttachments().isEmpty()) {
             for (Message.Attachment attachment : event.getMessage().getAttachments()) {
                 ticket.getMessagesTranscript().add(attachment.getProxyUrl() + "\n");
@@ -47,6 +47,6 @@ public class TicketUpdateMessages extends ListenerAdapter {
         if (!event.getGuild().equals(guild) || !event.getChannelType().equals(ChannelType.TEXT) || ticket == null) return;
         if (event.getAuthor().isBot()) return;
 
-        ticket.getMessagesTranscript().set(ticket.getMessagesTranscript().size() -1, event.getAuthor().getName() + ": " + event.getMessage().getContentRaw() + "\n");
+        ticket.getMessagesTranscript().set(ticket.getMessagesTranscript().size() -1, event.getAuthor().getName() + " [" + event.getMessage().getTimeEdited() + "] " + ": " + event.getMessage().getContentRaw() + "\n");
     }
 }
