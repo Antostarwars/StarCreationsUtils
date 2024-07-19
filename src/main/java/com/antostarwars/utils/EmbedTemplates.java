@@ -2,6 +2,8 @@ package com.antostarwars.utils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 
+import java.awt.*;
+
 public class EmbedTemplates {
 
     public static EmbedBuilder getBlacklistEmbed() {
@@ -13,14 +15,14 @@ public class EmbedTemplates {
 
     public static EmbedBuilder getErrorEmbed(String error) {
         return new EmbedBuilder()
-                .setColor(ColorPalette.getDiscordEmbed())
+                .setColor(Color.RED)
                 .setTitle("Something went wrong")
                 .setDescription(error);
     }
 
     public static EmbedBuilder getSuccessEmbed(String success) {
         return new EmbedBuilder()
-                .setColor(ColorPalette.getDiscordEmbed())
+                .setColor(Color.GREEN)
                 .setTitle("Action made with success.")
                 .setDescription(success);
     }
