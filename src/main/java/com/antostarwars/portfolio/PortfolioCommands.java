@@ -20,10 +20,14 @@ public class PortfolioCommands {
 
     @Command(
             name = "addportfolio",
-            description = "Adds an image to portfolio",
-            permissions = {Permission.MESSAGE_MANAGE}
+            description = "Adds an image to portfolio"
     )
     public void onAddPortfolio(SlashCommandInteractionEvent event, Message.Attachment image) {
+        if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(Environment.get("STAFF_ROLE_ID")))) {
+            event.replyEmbeds(EmbedTemplates.getErrorEmbed("You cannot use this command!").build()).setEphemeral(true).queue();
+            return;
+        }
+
         PortfolioManager manager = instance.getPortfolioManager();
 
         Portfolio portfolio = manager.findBy(event.getUser().getId());
@@ -44,10 +48,14 @@ public class PortfolioCommands {
 
     @Command(
             name = "createportfolio",
-            description = "Create a portfolio",
-            permissions = {Permission.MESSAGE_MANAGE}
+            description = "Create a portfolio"
     )
     public void onCreatePortfolio(SlashCommandInteractionEvent event) {
+        if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(Environment.get("STAFF_ROLE_ID")))) {
+            event.replyEmbeds(EmbedTemplates.getErrorEmbed("You cannot use this command!").build()).setEphemeral(true).queue();
+            return;
+        }
+
         PortfolioManager manager = instance.getPortfolioManager();
 
         if (!manager.add(new Portfolio(event.getUser().getId(), new ArrayList<>()))) {
@@ -60,10 +68,14 @@ public class PortfolioCommands {
 
     @Command(
             name = "removeportfolio",
-            description = "Remove a portfolio",
-            permissions = {Permission.MESSAGE_MANAGE}
+            description = "Remove a portfolio"
     )
     public void onRemovePortfolio(SlashCommandInteractionEvent event) {
+        if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(Environment.get("STAFF_ROLE_ID")))) {
+            event.replyEmbeds(EmbedTemplates.getErrorEmbed("You cannot use this command!").build()).setEphemeral(true).queue();
+            return;
+        }
+
         PortfolioManager manager = instance.getPortfolioManager();
 
         if (!manager.remove(event.getUser().getId())) {
